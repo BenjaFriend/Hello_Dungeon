@@ -4,18 +4,22 @@
 
 #include <iostream>
 
-/// <summary>
-/// The client for the dungeon
-/// </summary>
-class DungeonClient
+namespace Networking
 {
-public:
-    DungeonClient();
+    /// <summary>
+    /// The client for the dungeon
+    /// </summary>
+    class DungeonClient
+    {
+    public:
+        DungeonClient();
 
-    ~DungeonClient();
+        ~DungeonClient();
 
-private:
+    private:
 
 
 
-};
+    };
+
+}   // namespace Networking
