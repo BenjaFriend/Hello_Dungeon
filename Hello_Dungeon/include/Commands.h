@@ -8,7 +8,6 @@
 
 #define DEF_BUF_SIZE 256
 
-
 namespace Networking
 {
 

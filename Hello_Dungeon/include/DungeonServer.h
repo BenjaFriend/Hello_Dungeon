@@ -5,6 +5,8 @@
 #include <iostream>
 #include <unordered_map>
 
+#include "SocketUse.h"
+
 namespace Networking
 {
     /// <summary>
@@ -16,11 +18,24 @@ namespace Networking
     public:
         DungeonServer();
 
+        DungeonServer( UINT64 aPort, UINT32 aTreasureCount, UINT32 aMaxTreasureCount );
+
         ~DungeonServer();
 
+        /// <summary>
+        /// Run this server
+        /// </summary>
+        /// <returns>Result of running the server</returns>
+        UINT64 Run();
 
     private:
 
+        /** The port to run this server on */
+        UINT64 Port;
+
+        UINT32 TreasureCount;
+
+        UINT32 MaxTreasureCount;
 
     };
 

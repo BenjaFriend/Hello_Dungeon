@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "DungeonClient.h"
 
 using namespace Networking;

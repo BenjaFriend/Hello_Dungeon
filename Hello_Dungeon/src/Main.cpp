@@ -5,6 +5,7 @@
 
 #include "stdafx.h"
 #include <iostream>
+#include <memory>       // unique_ptr
 
 #include "Commands.h"
 #include "DungeonClient.h"
@@ -29,9 +30,11 @@ int main( int argc, char* argv [] )
         return -1;
     }
 
-    // Parse the command line to determine if we should make a client or server
-
-    std::cout << "Hello Dungeon!" << std::endl;
+    // Use a unique_ptr so that there will be automatic cleanup if something crashes
+    std::unique_ptr<Networking::DungeonServer> Server = std::make_unique<Networking::DungeonServer>();
+    
+    Server->Run();
+        
 
     return 0;
 }

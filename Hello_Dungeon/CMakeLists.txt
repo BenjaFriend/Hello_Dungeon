@@ -44,10 +44,3 @@ message ( STATUS "\tcxx Flags:" ${CMAKE_CXX_FLAGS} )
 
 # Add source to this project's executable.
 add_executable( ${PROJECT_NAME} ${_source_list} )
-
-
-# Add precompiled header
-if ( MSVC )
-   set_target_properties( ${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/Yustdafx.h" )
-   set_source_files_properties( stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h" )
-endif( MSVC )
