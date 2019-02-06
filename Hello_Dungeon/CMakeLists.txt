@@ -4,9 +4,7 @@
 set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin" )
 
-# Grab the source files
-file( GLOB_RECURSE SRC_FILES "src/*.c*" "src/*.h*" )
-
+############### Include Files ##################
 include_directories(
     include
     src
@@ -23,9 +21,22 @@ endif()
 set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MY_COMPILER_FLAGS}" )
 
 
+### Setup visual studio source groups / filters ###
+file( GLOB_RECURSE _source_list *.cpp* *.h* *.hpp* )
+
+foreach( _source IN ITEMS ${_source_list} )
+
+	message( "Source file: " ${_source} )
+    get_filename_component( _source_path "${_source}" PATH )
+    string( REPLACE "${CMAKE_SOURCE_DIR}" "" _group_path "${_source_path}" )
+    string( REPLACE "/" "\\" _group_path "${_group_path}" )
+    source_group( "${_group_path}" FILES "${_source}" )
+
+endforeach()
+
 ################# Add Exe ######################
 message ( STATUS "\tMY  Flags:" ${MY_COMPILER_FLAGS} )
 message ( STATUS "\tcxx Flags:" ${CMAKE_CXX_FLAGS} )
 
 # Add source to this project's executable.
-add_executable( ${PROJECT_NAME} ${SRC_FILES} )
+add_executable( ${PROJECT_NAME} ${_source_list} )

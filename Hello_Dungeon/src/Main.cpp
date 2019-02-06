@@ -4,7 +4,7 @@
 /// </summary>
 
 #include <iostream>
-#include <stdlib.h>
+#include "stdafx.h"
 
 #include "Commands.h"
 #include "DungeonClient.h"
@@ -13,17 +13,8 @@
 #define SERVER_CMD      "DUNGEON_SRV"
 #define CLIENT_CMD      "DUNGEON_CLI"
 
-void PrintHelp()
-{
-    fprintf( stderr, "\nUSAGE: ./Hello_Dungeon.exe [-%s] <SERVER OPTIONS> ... [-%s] <CLIENT OPTIONS>\n", SERVER_CMD, CLIENT_CMD );
+#include "PrintHelpers.h"
 
-    fprintf( stderr, "\t-h\tPrint this helpful message.\n" );
-    fprintf( stderr, "\nSERVER Options: \n" );
-    fprintf( stderr, "\t-s\tSize of dungeon\n" );
-    fprintf( stderr, "\t-t\tthe treasure count\n" );
-    fprintf( stderr, "\t-m\tMax Treasure Count\n" );
-    fprintf( stderr, "\t-p\tPort to connect to\n" );
-}
 
 int main( int argc, char* argv [] )
 {
@@ -34,7 +25,7 @@ int main( int argc, char* argv [] )
 
     if ( argc <= 1 )
     {
-        PrintHelp();
+        Helpers::PrintHelp();
         return -1;
     }
 

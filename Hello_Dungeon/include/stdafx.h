@@ -4,6 +4,7 @@
 /// <author>Ben Hoffman</author>
 
 #include <iostream>
+#include <stdlib.h>
 
 #if defined( _DEBUG ) 
 
