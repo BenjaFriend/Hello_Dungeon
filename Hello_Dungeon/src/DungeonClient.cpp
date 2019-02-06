@@ -4,7 +4,7 @@
 
 using namespace Networking;
 
-DungeonClient::DungeonClient()
+DungeonClient::DungeonClient( const char* aServerAddr, const int aPort )
 {
     std::cout << "\tClient ctor!" << std::endl;
     

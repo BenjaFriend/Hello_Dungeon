@@ -30,12 +30,27 @@ namespace Networking
 
     private:
 
-        /** The port to run this server on */
-        UINT64 Port;
+        void Shutdown();
 
+        /** The socket for the server to use */
+        SOCKET ServerSocket = INVALID_SOCKET;
+
+        /** The running server thread */
+        std::thread RunningThread;
+        
+        /** Atomic flag to check if we are done */
+        std::atomic<bool> isDone;
+
+        /** The port to run this server on */
+        UINT64 Port = 50000;
+
+        /** The value of each treasure */
         UINT32 TreasureCount;
 
+        /** The max number of treasure chests in the dungeon */
         UINT32 MaxTreasureCount;
+
+        // 2D array representing the dungeon
 
     };
 
