@@ -3,7 +3,9 @@
 #include "Commands.h"
 
 #include <iostream>
+#include <string>
 #include <unordered_map>
+#include <mutex>
 
 #include "SocketUse.h"
 
@@ -11,9 +13,9 @@ namespace Networking
 {
     struct SERVER_DESC
     {
-        UINT64 aPort = DEF_SERVER_PORT;
-        UINT32 aTreasureCount;
-        UINT32 aMaxTreasureCount;
+        USHORT Port = DEF_SERVER_PORT;
+        UINT32 TreasureCount;
+        UINT32 MaxTreasureCount;
     };
 
     /// <summary>
@@ -39,7 +41,7 @@ namespace Networking
         ~DungeonServer();
 
         /// <summary>
-        /// Run this server
+        /// Run this server and listens for commands
         /// </summary>
         /// <returns>Result of running the server</returns>
         UINT64 Run();
@@ -52,6 +54,16 @@ namespace Networking
 
     private:
 
+        /// <summary>
+        /// Logic for listening to commands sent from clients
+        /// </summary>
+        void ListenThread();
+
+        /// <summary>
+        /// Function for handling the local server commands
+        /// </summary>
+        void ProcessLocalConsole();
+
         /** The socket for the server to use */
         SOCKET ServerSocket = INVALID_SOCKET;
 
@@ -62,7 +74,7 @@ namespace Networking
         std::atomic<bool> isDone;
 
         /** The port to run this server on */
-        UINT64 Port = 50000;
+        USHORT Port = 50000;
 
         /** The value of each treasure */
         UINT32 TreasureCount;

@@ -35,15 +35,20 @@ int main( int argc, char* argv [] )
 
     Networking::SERVER_DESC server = {};
 
-    server.aPort = DEF_SERVER_PORT;
-    server.aMaxTreasureCount = 10;
-    server.aTreasureCount = 5;
+    server.Port = DEF_SERVER_PORT;
+    server.MaxTreasureCount = 10;
+    server.TreasureCount = 5;
 
-    // Use a unique_ptr so that there will be automatic cleanup if something crashes
-    std::unique_ptr<Networking::DungeonServer> Server = std::make_unique<Networking::DungeonServer>( server );
+    {
+        // Use a unique_ptr so that there will be automatic cleanup 
+        // if something crashes
+        std::unique_ptr<Networking::DungeonServer> Server =
+            std::make_unique<Networking::DungeonServer>( server );
 
-    Server->Run();
+        Server->Run();
 
-
+        Server->Shutdown();
+    }
+    
     return 0;
 }
