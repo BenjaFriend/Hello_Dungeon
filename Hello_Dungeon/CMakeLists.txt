@@ -4,6 +4,9 @@
 set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin" )
 
+# Get rid of zero_check project gen
+set( CMAKE_SUPPRESS_REGENERATION true )
+
 ############### Include Files ##################
 include_directories(
     include
@@ -34,9 +37,17 @@ foreach( _source IN ITEMS ${_source_list} )
 
 endforeach()
 
+
 ################# Add Exe ######################
 message ( STATUS "\tMY  Flags:" ${MY_COMPILER_FLAGS} )
 message ( STATUS "\tcxx Flags:" ${CMAKE_CXX_FLAGS} )
 
 # Add source to this project's executable.
 add_executable( ${PROJECT_NAME} ${_source_list} )
+
+
+# Add precompiled header
+if ( MSVC )
+   set_target_properties( ${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/Yustdafx.h" )
+   set_source_files_properties( stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h" )
+endif( MSVC )

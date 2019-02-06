@@ -3,8 +3,8 @@
 /// line input and creates a client or server accordingly
 /// </summary>
 
-#include <iostream>
 #include "stdafx.h"
+#include <iostream>
 
 #include "Commands.h"
 #include "DungeonClient.h"
