@@ -3,10 +3,19 @@
 #include "Commands.h"
 #include "SocketUse.h"
 
+#include "concurrentqueue.h"
+
 #include <iostream>
 
 namespace Networking
 {
+    struct CLIENT_DESC
+    {
+        char* ServerAddr;
+        USHORT ServerPort   = DEF_SERVER_PORT;
+        USHORT RunningPort  = DEF_CLIENT_PORT;
+    };
+
     /// <summary>
     /// The client for the dungeon
     /// </summary>
@@ -18,10 +27,12 @@ namespace Networking
         /// Connects the client to the given server and spawns a thread
         /// for processing commands
         /// </summary>
-        /// <param name="aServerAddr">The server address to connect o</param>
-        /// <param name="aPort">Port on the server to connect to </param>
-        DungeonClient( const char* aServerAddr, const int aPort );
+        /// <param name="aDesc">Description of this client</param>
+        DungeonClient( CLIENT_DESC aDesc );
 
+        /// <summary>
+        /// Shut down the client 
+        /// </summary>
         ~DungeonClient();
 
         /// <summary>
@@ -29,27 +40,46 @@ namespace Networking
         /// </summary>
         void Run();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        void Shutdown();
+
     private:
 
         /// <summary>
-        /// Worker thread for the client to lsiten to data from 
+        /// Do socket initialization with winSoc2 
+        /// </summary>
+        void InitSocket();
+
+        /// <summary>
+        /// Worker thread for the client to listen to data from 
         /// the server on. Handle the processing of recieved commands
         /// </summary>
-        void ClientSocketThread();
+        void ClientWorker();
         
         /** The socket for the client to use */
         SOCKET ClientSocket = INVALID_SOCKET;
 
+        /** ID for the connection to the server */
+        UINT64 serverSockID;
+
+        /** Check for if the client is done or not */
+        std::atomic<bool> IsDone;
+
+        /** The thread for running the client socket options */
+        std::thread ClientSocketThread;
+
         /** The port to connect to on the server */
-        int CurrentPort = 50000;
+        USHORT CurrentPort = 50001;
 
         /** The server address for this socket to connect to */
         char ServerAddr [ 32 ];
 
-        /** Thread where client is listening for data from the server */
-        std::thread ClientThread;
-
-
+        USHORT ServerPort = 50000;
+        
+        /** Lock-less command queue */
+        //moodycamel::ConcurrentQueue<Command> CommandQueue;
 
     };
 

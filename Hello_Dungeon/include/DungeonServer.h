@@ -9,17 +9,33 @@
 
 namespace Networking
 {
+    struct SERVER_DESC
+    {
+        UINT64 aPort = DEF_SERVER_PORT;
+        UINT32 aTreasureCount;
+        UINT32 aMaxTreasureCount;
+    };
+
     /// <summary>
     /// The authoritative server for the dungeon in charge of handling 
     /// what clients are connected, and processing commands
     /// </summary>
+    /// <author>Ben Hoffman</author>
     class DungeonServer
     {
     public:
-        DungeonServer();
 
-        DungeonServer( UINT64 aPort, UINT32 aTreasureCount, UINT32 aMaxTreasureCount );
+        /// <summary>
+        /// Create the server with the given description
+        /// Generate the dungeon and treasure
+        /// Create/bind the server socket
+        /// </summary>
+        /// <param name="aDesc">The description of this server </param>
+        DungeonServer( SERVER_DESC aDesc );
 
+        /// <summary>
+        /// Cleanup the socket connections and the dungeon
+        /// </summary>
         ~DungeonServer();
 
         /// <summary>
@@ -28,9 +44,13 @@ namespace Networking
         /// <returns>Result of running the server</returns>
         UINT64 Run();
 
-    private:
-
+        /// <summary>
+        /// Shut down the server socket and let the clients 
+        /// know that the game has ended
+        /// </summary>
         void Shutdown();
+
+    private:
 
         /** The socket for the server to use */
         SOCKET ServerSocket = INVALID_SOCKET;
@@ -50,9 +70,8 @@ namespace Networking
         /** The max number of treasure chests in the dungeon */
         UINT32 MaxTreasureCount;
 
-        // 2D array representing the dungeon
+        // #TODO: 2D array representing the dungeon
 
     };
-
 
 }   // namespace Networking

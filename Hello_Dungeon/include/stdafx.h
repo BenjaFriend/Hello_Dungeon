@@ -18,9 +18,11 @@
 typedef unsigned __int64        UINT64;
 typedef unsigned __int32        UINT32;
 typedef unsigned __int8         UINT8;
+typedef unsigned short          USHORT;
 typedef signed __int64          INT64;
 typedef signed __int32          INT32;
 typedef signed __int8           INT8;
+typedef signed short            SHORT;
 
 
 /************************************************************************/

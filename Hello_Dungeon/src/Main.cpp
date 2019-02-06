@@ -14,7 +14,7 @@
 #define SERVER_CMD      "DUNGEON_SRV"
 #define CLIENT_CMD      "DUNGEON_CLI"
 
-#include "PrintHelpers.h"
+#include "Helpers.h"
 
 
 int main( int argc, char* argv [] )
@@ -27,14 +27,23 @@ int main( int argc, char* argv [] )
     if ( argc <= 1 )
     {
         Helpers::PrintHelp();
-        return -1;
+        //return -1;
     }
 
+    UINT64 PORT = DEF_CLIENT_PORT;
+    char SERVER_ADDR [ 32 ] = "127.0.0.1\0";
+
+    Networking::SERVER_DESC server = {};
+
+    server.aPort = DEF_SERVER_PORT;
+    server.aMaxTreasureCount = 10;
+    server.aTreasureCount = 5;
+
     // Use a unique_ptr so that there will be automatic cleanup if something crashes
-    std::unique_ptr<Networking::DungeonServer> Server = std::make_unique<Networking::DungeonServer>();
-    
+    std::unique_ptr<Networking::DungeonServer> Server = std::make_unique<Networking::DungeonServer>( server );
+
     Server->Run();
-        
+
 
     return 0;
 }
