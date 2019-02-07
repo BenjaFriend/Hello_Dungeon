@@ -2,10 +2,8 @@
 
 ############### Project Settings ###############
 set_property( GLOBAL PROPERTY USE_FOLDERS ON )
-set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin" )
 
-# Get rid of zero_check project gen
-set( CMAKE_SUPPRESS_REGENERATION true )
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/_Output )
 
 ############### Include Files ##################
 include_directories(

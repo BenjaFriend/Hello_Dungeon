@@ -6,14 +6,24 @@
 #include "concurrentqueue.h"
 
 #include <iostream>
+#include <string>
+#include <unordered_map>
 
 namespace Networking
 {
+    /// <summary>
+    /// Description of how this client should run
+    /// </summary>
     struct CLIENT_DESC
     {
-        char* ServerAddr;
-        USHORT ServerPort   = DEF_SERVER_PORT;
-        USHORT RunningPort  = DEF_CLIENT_PORT;
+        /** Server address */
+        char ServerAddr [ 32 ] = "127.0.0.1\0";
+
+        /** The port that the server is running on */
+        USHORT ServerPort = DEF_SERVER_PORT;
+
+        /** The port that this client's socket should bind to */
+        USHORT RunningPort = DEF_CLIENT_PORT;
     };
 
     /// <summary>
@@ -41,11 +51,18 @@ namespace Networking
         void Run();
 
         /// <summary>
-        /// 
+        /// Shuts down the connection to the server
+        /// Cleans up winsoc and any other socket info
         /// </summary>
         void Shutdown();
 
     private:
+
+        /// <summary>
+        /// Initilze the map of commands that we can send as 
+        /// a client
+        /// </summary>
+        void InitCommandMap();
 
         /// <summary>
         /// Do socket initialization with winSoc2 
@@ -54,9 +71,14 @@ namespace Networking
 
         /// <summary>
         /// Worker thread for the client to listen to data from 
-        /// the server on. Handle the processing of recieved commands
+        /// the server on. Handle the processing of received commands
         /// </summary>
         void ClientWorker();
+
+        /// <summary>
+        /// Process the input that the user types on the keyboard
+        /// </summary>
+        void ProcessInput();
         
         /** The socket for the client to use */
         SOCKET ClientSocket = INVALID_SOCKET;
@@ -76,10 +98,14 @@ namespace Networking
         /** The server address for this socket to connect to */
         char ServerAddr [ 32 ];
 
+        /** The port that the server should run on */
         USHORT ServerPort = 50000;
-        
+
         /** Lock-less command queue */
-        //moodycamel::ConcurrentQueue<Command> CommandQueue;
+        moodycamel::ConcurrentQueue<Command> CommandQueue;
+
+        /** A map of possible inputs to their corresponding commands */
+        std::unordered_map<std::string, Command> InputCmdMap;
 
     };
 

@@ -34,8 +34,8 @@ typedef signed short            SHORT;
 
 #include <crtdbg.h> 
 
-#define DEBUG_NEW new( _NORMAL_BLOCK, __FILE__, __LINE__ )
-#define new DEBUG_NEW
+//#define DEBUG_NEW new( _NORMAL_BLOCK, __FILE__, __LINE__ )
+//#define new DEBUG_NEW
 
 #define LOG_TRACE(a, ...) printf("%s: %d(): " a "\n", __FILE__, __LINE__, __VA_ARGS__);
 

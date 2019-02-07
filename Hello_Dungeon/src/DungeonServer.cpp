@@ -30,8 +30,7 @@ UINT64 DungeonServer::Run()
     // Start the listener thread
     RunningThread = std::thread( &Networking::DungeonServer::ListenThread, this );
 
-    // Listen for IO
-    //ProcessLocalConsole();
+    RunningThread.join();
     
     return 1;
 }

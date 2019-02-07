@@ -11,8 +11,14 @@
 #include "DungeonClient.h"
 #include "DungeonServer.h"
 
-#define SERVER_CMD      "DUNGEON_SRV"
-#define CLIENT_CMD      "DUNGEON_CLI"
+#define SERVER_CMD      "-DUNGEON_SRV"
+#define CLIENT_CMD      "-DUNGEON_CLI"
+#define HELP_FLAG       "-h"
+#define DUNG_SIZE_FLAG  "-s"
+#define TRS_CNT_FLAG    "-t"
+#define MAX_CNT_FLAG    "-m"
+#define PORT_FLAG       "-p"
+
 
 #include "Helpers.h"
 
@@ -30,25 +36,57 @@ int main( int argc, char* argv [] )
         //return -1;
     }
 
-    UINT64 PORT = DEF_CLIENT_PORT;
-    char SERVER_ADDR [ 32 ] = "127.0.0.1\0";
+    // Parse the command line args
+    bool isClient = false;
+    bool isServer = false;
 
-    Networking::SERVER_DESC server = {};
+    Networking::SERVER_DESC serverInfo = {};
+    Networking::CLIENT_DESC clientInfo = {};
 
-    server.Port = DEF_SERVER_PORT;
-    server.MaxTreasureCount = 10;
-    server.TreasureCount = 5;
-
+    for ( size_t i = 0; i < argc; ++i )
     {
+        if ( strcmp( argv [ i ], HELP_FLAG ) == 0 )
+        {
+            Helpers::PrintHelp();
+            exit( EXIT_FAILURE );
+        }
+        else if ( strcmp( argv [ i ], SERVER_CMD ) == 0 )
+        {
+            isServer = true;
+            isClient = false;
+        }
+        else if ( strcmp( argv [ i ], CLIENT_CMD ) == 0 )
+        {
+            isServer = false;
+            isClient = true;
+        }
+        // #TODO: Check other port flags 
+    }
+
+    if ( isServer )
+    {
+        std::cout << "--- Run Server ---" << std::endl;
         // Use a unique_ptr so that there will be automatic cleanup 
         // if something crashes
         std::unique_ptr<Networking::DungeonServer> Server =
-            std::make_unique<Networking::DungeonServer>( server );
+            std::make_unique<Networking::DungeonServer>( serverInfo );
 
         Server->Run();
 
         Server->Shutdown();
     }
-    
+    else if ( isClient )
+    {
+        std::cout << "--- Run Client ---" << std::endl;
+        std::unique_ptr<Networking::DungeonClient> Client =
+            std::make_unique<Networking::DungeonClient>( clientInfo );
+
+        Client->Run();
+
+        Client->Shutdown();
+    }
+
+    std::cout << "Program exit!" << std::endl;
+
     return 0;
 }

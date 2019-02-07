@@ -10,7 +10,6 @@
 
 namespace Networking
 {
-
     struct Command
     {
         unsigned char cmd;
