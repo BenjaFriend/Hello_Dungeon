@@ -11,12 +11,12 @@ DungeonClient::DungeonClient( CLIENT_DESC aDesc )
     strcpy_s( ServerAddr, 32, aDesc.ServerAddr );
     ServerPort = aDesc.ServerPort;
     CurrentPort = aDesc.RunningPort;
-    
+
     std::cout << "Start client!" << std::endl;
-    std::cout << "\tServer Address: \t"         << ServerAddr << std::endl;
+    std::cout << "\tServer Address: \t" << ServerAddr << std::endl;
     std::cout << "\tConnect to Server Port: \t" << ServerPort << std::endl;
-    std::cout << "\tRun client on port: \t"     << CurrentPort << std::endl;
-   
+    std::cout << "\tRun client on port: \t" << CurrentPort << std::endl;
+
     InitCommandMap();
 
     InitSocket();
@@ -114,7 +114,7 @@ void DungeonClient::ClientWorker()
     {
         // Check if the client should stop
         if ( IsDone ) return;
-            
+
         // Check if there is a command to send in the queue
         Command currentCommand = {};
         bool found = CommandQueue.try_dequeue( currentCommand );
@@ -160,17 +160,33 @@ void DungeonClient::ProcessInput()
         if ( input == "QUIT" || input == "Q" )
         {
             IsDone = true;
-            // #TODO: Enqueue a leave command to send
+            // #TODO: Enqueue a leave command to send to the server
             return;
         }
-
-        // Check if it is a command that we recognize
-        for ( const auto & itr : InputCmdMap )
+        else if ( input == "HELP" )
         {
-            if ( itr.first == input )
+            PrintCommandList();
+        }
+        else
+        {
+            // Check if it is a command that we recognize
+            for ( const auto & itr : InputCmdMap )
             {
-                CommandQueue.enqueue( itr.second );
+                if ( itr.first == input )
+                {
+                    CommandQueue.enqueue( itr.second );
+                }
             }
         }
+    }
+}
+
+void DungeonClient::PrintCommandList()
+{
+    std::cout << "Command list:" << std::endl;
+
+    for ( const auto & itr : InputCmdMap )
+    {
+        std::cout << "\t" << itr.first << std::endl;
     }
 }

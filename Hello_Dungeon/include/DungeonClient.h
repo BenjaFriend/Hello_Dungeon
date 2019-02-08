@@ -80,6 +80,12 @@ namespace Networking
         /// </summary>
         void ProcessInput();
         
+        /// <summary>
+        /// Prints out the list of possible commands
+        /// for the user to use for help
+        /// </summary>
+        void PrintCommandList();
+
         /** The socket for the client to use */
         SOCKET ClientSocket = INVALID_SOCKET;
 

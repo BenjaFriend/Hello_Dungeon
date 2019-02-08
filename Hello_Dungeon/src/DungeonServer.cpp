@@ -126,11 +126,13 @@ void DungeonServer::ListenThread()
 
         // Memcpy the data that was received into a command data structure
         Command cmd = {};
-        
+
         // #TODO: Do some kind of data validation so that we don't just copy 
         // random received data to memory
         memcpy( &cmd, ( void* ) buf, sizeof( Command ) );
-        
+
+        LOG_TRACE( "Data recieved: %c // %s", cmd.cmd, cmd.payload );
+
         // #TODO: Throw this command in a ring buffer or something to process it
         // on a separate thread (lockless queue could also work)
 
