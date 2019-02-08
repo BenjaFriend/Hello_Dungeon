@@ -121,10 +121,10 @@ void DungeonClient::ClientWorker()
 
         if ( found )
         {
-            char charCmd [ 64 ];
-            memcpy( charCmd, ( void* ) ( &currentCommand ), sizeof( Command ) );
+            char charCmd [ DEF_BUF_SIZE ];
+            memcpy( charCmd, ( void* ) ( &currentCommand ), DEF_BUF_SIZE );
 
-            if ( sendto( serverSockID, charCmd, sizeof( Command ), 0,
+            if ( sendto( serverSockID, charCmd, DEF_BUF_SIZE, 0,
                 ( struct sockaddr* ) &si_other, slen ) == SOCKET_ERROR )
             {
                 printf( "sendto() failed : %d ", WSAGetLastError() );

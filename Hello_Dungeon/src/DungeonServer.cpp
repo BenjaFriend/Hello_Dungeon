@@ -31,14 +31,14 @@ UINT64 DungeonServer::Run()
     RunningThread = std::thread( &Networking::DungeonServer::ListenThread, this );
 
     RunningThread.join();
-    
+
     return 1;
 }
 
 void DungeonServer::Shutdown()
 {
     isDone = true;
-    
+
     if ( RunningThread.joinable() )
     {
         RunningThread.join();
@@ -71,6 +71,8 @@ void DungeonServer::ListenThread()
     if ( ( ServerSocket = socket( AF_INET, SOCK_DGRAM, 0 ) ) == SOCKET_ERROR )
     {
         LOG_TRACE( "Could not create socket : %d ", WSAGetLastError() );
+        Shutdown();
+        return;
     }
 
     LOG_TRACE( "Socket created." );
@@ -82,6 +84,7 @@ void DungeonServer::ListenThread()
     if ( bind( ServerSocket, ( struct sockaddr* )&server, sizeof( server ) ) == SOCKET_ERROR )
     {
         LOG_TRACE( "Could not create socket : %d ", WSAGetLastError() );
+        Shutdown();
         exit( EXIT_FAILURE );
     }
 
@@ -92,6 +95,7 @@ void DungeonServer::ListenThread()
     if ( iResult != NO_ERROR )
     {
         LOG_TRACE( "ioctlsocket failed with error: %ld\n", iResult );
+        Shutdown();
         exit( EXIT_FAILURE );
     }
 
@@ -109,6 +113,7 @@ void DungeonServer::ListenThread()
         if ( ( recv_len = recvfrom( ServerSocket, buf, DEF_BUF_SIZE, 0, ( struct sockaddr* ) &si_other, &slen ) ) == SOCKET_ERROR )
         {
             LOG_TRACE( "recvfrom failed with error code : %d", WSAGetLastError() );
+            Shutdown();
             exit( EXIT_FAILURE );
         }
 
@@ -118,6 +123,17 @@ void DungeonServer::ListenThread()
         std::string newIP = ip_str;
 
         LOG_TRACE( "Data received from %s", ip_str );
+
+        // Memcpy the data that was received into a command data structure
+        Command cmd = {};
+        
+        // #TODO: Do some kind of data validation so that we don't just copy 
+        // random received data to memory
+        memcpy( &cmd, ( void* ) buf, sizeof( Command ) );
+        
+        // #TODO: Throw this command in a ring buffer or something to process it
+        // on a separate thread (lockless queue could also work)
+
     }
 }
 
