@@ -10,7 +10,6 @@ DungeonClient::DungeonClient( CLIENT_DESC aDesc )
 
     strcpy_s( ServerAddr, 32, aDesc.ServerAddr );
     ServerPort = aDesc.ServerPort;
-    CurrentPort = aDesc.RunningPort;
 
     std::cout << "Start client!" << std::endl;
     std::cout << "\tServer Address: \t" << ServerAddr << std::endl;
@@ -30,11 +29,12 @@ DungeonClient::~DungeonClient()
 
 void DungeonClient::InitCommandMap()
 {
-    Command EnterDung = {};
-    EnterDung.cmd = 'E';
-    strcpy_s( EnterDung.payload, DEF_BUF_SIZE, "Enter dungeon command boi!" );
+    Command Cmd = {};
+    Cmd.cmd = 'E';
+    strcpy_s( Cmd.payload, DEF_BUF_SIZE, "Enter dungeon command boi!" );
+    InputCmdMap.emplace( "ENTER", Cmd );
 
-    InputCmdMap.emplace( "ENTER", EnterDung );
+    
 }
 
 void DungeonClient::InitSocket()
@@ -163,7 +163,7 @@ void DungeonClient::ProcessInput()
             // #TODO: Enqueue a leave command to send to the server
             return;
         }
-        else if ( input == "HELP" )
+        else if ( input == "HELP" || input == "H" )
         {
             PrintCommandList();
         }

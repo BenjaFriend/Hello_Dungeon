@@ -21,9 +21,6 @@ namespace Networking
 
         /** The port that the server is running on */
         USHORT ServerPort = DEF_SERVER_PORT;
-
-        /** The port that this client's socket should bind to */
-        USHORT RunningPort = DEF_CLIENT_PORT;
     };
 
     /// <summary>
@@ -98,8 +95,8 @@ namespace Networking
         /** The thread for running the client socket options */
         std::thread ClientSocketThread;
 
-        /** The port to connect to on the server */
-        USHORT CurrentPort = 50001;
+        /** The port to run this client on */
+        USHORT CurrentPort = DEF_CLIENT_PORT;
 
         /** The server address for this socket to connect to */
         char ServerAddr [ 32 ];

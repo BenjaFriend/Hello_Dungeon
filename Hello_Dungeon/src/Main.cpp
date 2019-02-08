@@ -60,6 +60,11 @@ int main( int argc, char* argv [] )
             isServer = false;
             isClient = true;
         }
+        else if ( strcmp( argv [ i ], PORT_FLAG ) == 0 )
+        {
+            sscanf_s( argv [ i + 1 ], "%d", &serverInfo.Port );
+            sscanf_s( argv [ i + 1 ], "%d", &clientInfo.ServerPort);
+        }
         // #TODO: Check other port flags 
     }
 
