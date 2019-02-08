@@ -37,6 +37,13 @@ public:
     /// </summary>
     void AddPlayer();
 
+    /************************************************************************/
+    /* Accessors                                                            */
+    /************************************************************************/
+    inline const UINT8 GetSize() const { return Size; }
+    inline const UINT32 GetTreasureValue() const { return TreasureValue; }
+    inline const UINT32 GetMaxTreasureCount() const { return MaxTreasureCount; }
+
 private:
 
     /// <summary>

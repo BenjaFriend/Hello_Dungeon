@@ -76,7 +76,7 @@ int main( int argc, char* argv [] )
         std::unique_ptr<Networking::DungeonServer> Server =
             std::make_unique<Networking::DungeonServer>( serverInfo );
 
-        //Server->Run();
+        Server->Run();
 
         Server->Shutdown();
     }

@@ -138,7 +138,34 @@ void DungeonServer::ListenThread()
         // random received data to memory
         memcpy( &cmd, ( void* ) buf, sizeof( Command ) );
 
-        LOG_TRACE( "Data recieved: %c // %s", cmd.cmd, cmd.payload );
+        switch ( cmd.CmdType )
+        {
+        case Networking::ECommandType::ENTER:
+            // Add this client to the server if they are 
+            // not already there
+            LOG_TRACE( "Enter room!" );
+            break;
+        case Networking::ECommandType::MOVE:
+            LOG_TRACE( "MOVE!" );
+
+            // attempt to move the object
+            break;
+        case Networking::ECommandType::PICKUP:
+            LOG_TRACE( "PICKUP" );
+
+            // Check if the client can pick something up
+            break;
+        case Networking::ECommandType::QUIT:
+            LOG_TRACE( "CLIENT QUIT" );
+
+            // remove this client from the map
+            break;
+
+        default:
+            break;
+        }
+
+        //LOG_TRACE( "Data recieved: %c // %s", cmd.CmdType, cmd.payload );
 
         // #TODO: Throw this command in a ring buffer or something to process it
         // on a separate thread (lockless queue could also work)

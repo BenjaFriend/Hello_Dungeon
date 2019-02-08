@@ -11,10 +11,10 @@ DungeonClient::DungeonClient( CLIENT_DESC aDesc )
     strcpy_s( ServerAddr, 32, aDesc.ServerAddr );
     ServerPort = aDesc.ServerPort;
 
-    std::cout << "Start client!"                << std::endl;
-    std::cout << "\tServer Address:"            << ServerAddr << std::endl;
-    std::cout << "\tConnect to Server Port:"    << ServerPort << std::endl;
-    std::cout << "\tRun client on port:"        << CurrentPort << std::endl;
+    std::cout << "Start client!" << std::endl;
+    std::cout << "\tServer Address:" << ServerAddr << std::endl;
+    std::cout << "\tConnect to Server Port:" << ServerPort << std::endl;
+    std::cout << "\tRun client on port:" << CurrentPort << std::endl;
 
     InitCommandMap();
 
@@ -29,12 +29,41 @@ DungeonClient::~DungeonClient()
 
 void DungeonClient::InitCommandMap()
 {
-    Command Cmd = {};
-    Cmd.cmd = 'E';
-    strcpy_s( Cmd.payload, DEF_BUF_SIZE, "Enter dungeon command boi!" );
-    InputCmdMap.emplace( "ENTER", Cmd );
+    // Enter ----------------------------------------
+    Command EnterCmd = {};
+    EnterCmd.CmdType = ECommandType::ENTER;
+    InputCmdMap.emplace( "ENTER", EnterCmd );
 
-    
+    // Quit ----------------------------------------
+    Command QuitCmd = {};
+    QuitCmd.CmdType = ECommandType::QUIT;
+    InputCmdMap.emplace( "QUIT", QuitCmd );
+
+    // Movement ----------------------------------------
+    Command MoveRightCmd = {};
+    MoveRightCmd.CmdType = ECommandType::MOVE;
+    MoveRightCmd.PacketData.Direction.move_right = 1;
+    InputCmdMap.emplace( "RIGHT", MoveRightCmd );
+
+    Command MoveLeftCmd = {};
+    MoveLeftCmd.CmdType = ECommandType::MOVE;
+    MoveLeftCmd.PacketData.Direction.move_left = 1;
+    InputCmdMap.emplace( "LEFT", MoveLeftCmd );
+
+    Command MoveUpCmd = {};
+    MoveUpCmd.CmdType = ECommandType::MOVE;
+    MoveUpCmd.PacketData.Direction.move_up = 1;
+    InputCmdMap.emplace( "UP", MoveUpCmd );
+
+    Command MoveDownCmd = {};
+    MoveDownCmd.CmdType = ECommandType::MOVE;
+    MoveDownCmd.PacketData.Direction.move_down = 1;
+    InputCmdMap.emplace( "DOWN", MoveDownCmd );
+
+    // Pickup ----------------------------------------
+    Command PickupCmd = {};
+    PickupCmd.CmdType = ECommandType::PICKUP;
+    InputCmdMap.emplace( "PICKUP", PickupCmd );
 }
 
 void DungeonClient::InitSocket()
@@ -93,8 +122,6 @@ void DungeonClient::ClientWorker()
 
 #pragma region Init Socket info
     int slen;
-    //char buf [ DEF_BUF_SIZE ];
-    //char message [ DEF_BUF_SIZE ];
     struct sockaddr_in  si_other;
     slen = sizeof( si_other );
 
@@ -122,10 +149,10 @@ void DungeonClient::ClientWorker()
         if ( found )
         {
             // Send this command to the server
-            char charCmd [ DEF_BUF_SIZE ];
-            memcpy( charCmd, ( void* ) ( &currentCommand ), DEF_BUF_SIZE );
+            char charCmd [ sizeof( Command ) ];
+            memcpy( charCmd, ( void* ) ( &currentCommand ), sizeof( Command ) );
 
-            if ( sendto( serverSockID, charCmd, DEF_BUF_SIZE, 0,
+            if ( sendto( serverSockID, charCmd, sizeof( Command ), 0,
                 ( struct sockaddr* ) &si_other, slen ) == SOCKET_ERROR )
             {
                 printf( "sendto() failed : %d ", WSAGetLastError() );

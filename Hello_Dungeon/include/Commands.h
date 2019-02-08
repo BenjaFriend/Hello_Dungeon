@@ -10,10 +10,35 @@
 
 namespace Networking
 {
+    /// <summary>
+    /// Types of commands that the client can send to the server
+    /// </summary>
+    enum class ECommandType : UINT8
+    {
+        ENTER,
+        MOVE,
+        PICKUP,
+        QUIT
+    };
+
     struct Command
     {
-        unsigned char cmd;
-        char payload [ DEF_BUF_SIZE ];
+        ECommandType CmdType;
+
+        union
+        {
+            // MOVE
+            struct
+            {
+                UINT8 move_left     : 1;    // Flags for what direction 
+                UINT8 move_right    : 1;    // the player may move
+                UINT8 move_up       : 1;
+                UINT8 move_down     : 1;
+            } Direction;  // 4 BITS
+
+            // Quit and enter don't really need any data to be sent along 
+
+        } PacketData;
     };
 
     struct Status
