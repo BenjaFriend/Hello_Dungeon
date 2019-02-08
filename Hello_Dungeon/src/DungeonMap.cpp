@@ -5,6 +5,7 @@
 DungeonMap::DungeonMap( UINT8 aSize, UINT32 aTreasureValue, UINT32 aMaxTreasureCount )
     : Size( aSize ), TreasureValue( aTreasureValue ), MaxTreasureCount( aMaxTreasureCount )
 {
+    // Initialize the map to be empty 
     Map = new char* [ Size ];
     for ( size_t i = 0; i < Size; ++i )
     {
@@ -52,8 +53,15 @@ void DungeonMap::PrintMap()
     PrintTopBorder();
 }
 
+void DungeonMap::AddPlayer()
+{
+    // Add a player to the map of players
+}
+
 void DungeonMap::SpawnTreasure()
 {
+    // Randomly pick spots to spawn a treasure within the 
+
 
 }
 

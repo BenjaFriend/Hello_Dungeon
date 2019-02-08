@@ -31,6 +31,12 @@ public:
     /// </summary>
     void PrintMap();
 
+    /// <summary>
+    /// Add a player to the map, putting them in a default
+    /// spawn position
+    /// </summary>
+    void AddPlayer();
+
 private:
 
     /// <summary>
