@@ -5,15 +5,22 @@
 using namespace Networking;
 
 DungeonServer::DungeonServer( SERVER_DESC aDesc )
-    :
-    Port( aDesc.Port ),
-    TreasureCount( aDesc.TreasureCount ),
-    MaxTreasureCount( aDesc.MaxTreasureCount )
+    : Port( aDesc.Port )
 {
-    LOG_TRACE( "Create the server!" );
-    LOG_TRACE( "\tPort:\t%d", Port );
-    LOG_TRACE( "\tMax Treasure:\t%d", MaxTreasureCount );
-    LOG_TRACE( "\tTreasure Count:\t%d", TreasureCount );
+    // Print out init info
+    std::cout << "Create the server!" << std::endl;
+    std::cout << "\tPort: " << Port << std::endl;
+    std::cout << "\tMax Treasure: " << aDesc.MaxTreasureCount << std::endl;
+    std::cout << "\tTreasure Value: " << aDesc.TreasureValue << std::endl;
+
+    // Init the map
+    Map = std::make_unique<DungeonMap>(
+        aDesc.DungeonSize,
+        aDesc.TreasureValue,
+        aDesc.MaxTreasureCount
+        );
+
+    Map->PrintMap();
 }
 
 DungeonServer::~DungeonServer()

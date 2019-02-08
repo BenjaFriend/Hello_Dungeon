@@ -11,10 +11,10 @@ DungeonClient::DungeonClient( CLIENT_DESC aDesc )
     strcpy_s( ServerAddr, 32, aDesc.ServerAddr );
     ServerPort = aDesc.ServerPort;
 
-    std::cout << "Start client!" << std::endl;
-    std::cout << "\tServer Address: \t" << ServerAddr << std::endl;
-    std::cout << "\tConnect to Server Port: \t" << ServerPort << std::endl;
-    std::cout << "\tRun client on port: \t" << CurrentPort << std::endl;
+    std::cout << "Start client!"                << std::endl;
+    std::cout << "\tServer Address:"            << ServerAddr << std::endl;
+    std::cout << "\tConnect to Server Port:"    << ServerPort << std::endl;
+    std::cout << "\tRun client on port:"        << CurrentPort << std::endl;
 
     InitCommandMap();
 
@@ -121,6 +121,7 @@ void DungeonClient::ClientWorker()
 
         if ( found )
         {
+            // Send this command to the server
             char charCmd [ DEF_BUF_SIZE ];
             memcpy( charCmd, ( void* ) ( &currentCommand ), DEF_BUF_SIZE );
 
@@ -128,13 +129,14 @@ void DungeonClient::ClientWorker()
                 ( struct sockaddr* ) &si_other, slen ) == SOCKET_ERROR )
             {
                 printf( "sendto() failed : %d ", WSAGetLastError() );
+                Shutdown();
                 exit( EXIT_FAILURE );
             }
 
             //clear buffer
             //memset( buf, '\0', DEF_BUF_SIZE );
 
-            // Receive something from the server
+            // Receive the game state back from the server
         }
         else
         {
@@ -146,6 +148,9 @@ void DungeonClient::ClientWorker()
 
 void DungeonClient::ProcessInput()
 {
+    std::cout << "Welcome to the dungeon!" << std::endl;
+    std::cout << "For a list of commands, enter \"HELP\"):" << std::endl;
+
     while ( 1 )
     {
         // Grab console input

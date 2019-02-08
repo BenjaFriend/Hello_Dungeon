@@ -1,21 +1,34 @@
 #pragma once
 
 #include "Commands.h"
+#include "DungeonMap.h"
 
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include <mutex>
+#include <memory>
 
 #include "SocketUse.h"
 
 namespace Networking
 {
+    /// <summary>
+    /// The instantiation information for creating a server
+    /// </summary>
     struct SERVER_DESC
     {
+        /** The port to run this server on */
         USHORT Port = DEF_SERVER_PORT;
-        UINT32 TreasureCount;
-        UINT32 MaxTreasureCount;
+
+        /** The value of each treasure */
+        UINT32 TreasureValue = 1;
+
+        /** The max number of treasure in this dungeon */
+        UINT32 MaxTreasureCount = 5;
+
+        /** The size of the dungeon to create */
+        UINT8 DungeonSize = 5;
     };
 
     /// <summary>
@@ -76,14 +89,8 @@ namespace Networking
         /** The port to run this server on */
         USHORT Port = 50000;
 
-        /** The value of each treasure */
-        UINT32 TreasureCount;
-
-        /** The max number of treasure chests in the dungeon */
-        UINT32 MaxTreasureCount;
-
-        // #TODO: 2D array representing the dungeon
-
+        /** The dungeon map to use for the player */
+        std::unique_ptr<DungeonMap> Map;
     };
 
 }   // namespace Networking

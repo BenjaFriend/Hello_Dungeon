@@ -62,8 +62,8 @@ int main( int argc, char* argv [] )
         }
         else if ( strcmp( argv [ i ], PORT_FLAG ) == 0 )
         {
-            sscanf_s( argv [ i + 1 ], "%d", &serverInfo.Port );
-            sscanf_s( argv [ i + 1 ], "%d", &clientInfo.ServerPort);
+            sscanf_s( argv [ i + 1 ], "%hu", &serverInfo.Port );
+            sscanf_s( argv [ i + 1 ], "%hu", &clientInfo.ServerPort);
         }
         // #TODO: Check other port flags 
     }
@@ -76,7 +76,7 @@ int main( int argc, char* argv [] )
         std::unique_ptr<Networking::DungeonServer> Server =
             std::make_unique<Networking::DungeonServer>( serverInfo );
 
-        Server->Run();
+        //Server->Run();
 
         Server->Shutdown();
     }
