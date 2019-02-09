@@ -21,6 +21,12 @@ namespace Networking
         QUIT
     };
 
+    enum class EResponseType : UINT8
+    {
+        MAP,        // The map around the player
+        STATS       // The stats of this player
+    };
+
     struct Command
     {
         /** The type of command that this is */
@@ -46,7 +52,24 @@ namespace Networking
 
     struct Status
     {
-        unsigned char status;
+        EResponseType ResType;
+
+        // Response strucutre
+        union
+        {
+            // MAP
+            struct
+            {
+                char map [ 16 ];
+            } MapData;
+
+            struct
+            {
+
+            } Stats;
+
+        } PacketData;
+
         char payload [ DEF_BUF_SIZE ];
 
         // Return the nearest parts of the dungeon to this player

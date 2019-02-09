@@ -73,6 +73,13 @@ void DungeonMap::AddPlayer( UINT8 aID )
     Map [ spawnPos.Row ] [ spawnPos.Col ] = aID;
 }
 
+void DungeonMap::RemovePlayer( UINT8 aID )
+{
+    if ( !PlayerExists( aID ) ) return;
+
+    PlayerPositions.erase( aID );
+}
+
 void DungeonMap::MovePlayer( UINT8 aID, Vector2 aMovement )
 {
     // Ensure that the player actually exists
@@ -99,7 +106,7 @@ void DungeonMap::MovePlayer( UINT8 aID, Vector2 aMovement )
 
 void DungeonMap::SpawnTreasure()
 {
-    srand( time( NULL ) );
+    srand( static_cast< unsigned int >( time( NULL ) ) );
     // Set treasure value to be random between 1 - value
     TreasureValue = rand() % TreasureValue + 1;
 

@@ -60,6 +60,12 @@ public:
     void AddPlayer( UINT8 aID );
 
     /// <summary>
+    /// Remove a player from the map
+    /// </summary>
+    /// <param name="aID">The player ID to remove</param>
+    void RemovePlayer( UINT8 aID );
+
+    /// <summary>
     /// Attempt to move the player through the dungeon
     /// in the given direction
     /// </summary>

@@ -142,7 +142,6 @@ void DungeonServer::ListenThread()
         switch ( cmd.CmdType )
         {
         case Networking::ECommandType::ENTER:
-            LOG_TRACE( "Enter room!" );                 
             AddNewPlayer( cmd.ID );
             Map->PrintMap();
             break;
@@ -151,22 +150,18 @@ void DungeonServer::ListenThread()
             if ( cmd.PacketData.Direction.Down )
             {
                 movePos.Row = 1;
-                LOG_TRACE( "Down" );
             }
             if ( cmd.PacketData.Direction.Up )
             {
                 movePos.Row = -1;
-                LOG_TRACE( "Up" );
             }
             if ( cmd.PacketData.Direction.Left )
             {
                 movePos.Col = -1;
-                LOG_TRACE( "Left" );
             }
             if ( cmd.PacketData.Direction.Right )
             {
                 movePos.Col = 1;
-                LOG_TRACE( "Right" );
             }
 
             Map->MovePlayer( cmd.ID, movePos );
@@ -180,9 +175,8 @@ void DungeonServer::ListenThread()
             // Check if the client can pick something up
             break;
         case Networking::ECommandType::QUIT:
-            LOG_TRACE( "CLIENT QUIT" );
-
-            // remove this client from the map
+            LOG_TRACE( "CLIENT QUIT : %c", cmd.ID );
+            Map->RemovePlayer( cmd.ID );
             break;
 
         default:
