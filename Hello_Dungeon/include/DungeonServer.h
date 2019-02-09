@@ -83,7 +83,7 @@ namespace Networking
         /// if they do not already exist
         /// </summary>
         /// <param name="aID">Player ID to add</param>
-        inline void AddNewPlayer( PlayerID aID );
+        inline void AddNewPlayer( UINT8 aID );
 
         /** The socket for the server to use */
         SOCKET ServerSocket = INVALID_SOCKET;
@@ -101,7 +101,7 @@ namespace Networking
         std::unique_ptr<DungeonMap> Map;
 
         /** A vector of currently connected players */
-        std::vector<PlayerID> CurrentPlayers;
+        std::vector<UINT8> CurrentPlayers;
     };
 
 }   // namespace Networking

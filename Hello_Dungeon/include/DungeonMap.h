@@ -49,7 +49,7 @@ public:
     /// Add a player to the map, putting them in a default
     /// spawn position
     /// </summary>
-    void AddPlayer( PlayerID aID );
+    void AddPlayer( UINT8 aID );
 
     /************************************************************************/
     /* Accessors                                                            */
@@ -91,5 +91,5 @@ private:
     char** Map = nullptr;
 
     /** A map of player positions */
-    std::unordered_map<PlayerID, Position> PlayerPositions;
+    std::unordered_map<UINT8, Position> PlayerPositions;
 };

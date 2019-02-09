@@ -55,7 +55,7 @@ void DungeonMap::PrintMap()
     PrintTopBorder();
 }
 
-void DungeonMap::AddPlayer( PlayerID aID )
+void DungeonMap::AddPlayer( UINT8 aID )
 {
     // Add a player to the map of players
     Position spawnPos = {};

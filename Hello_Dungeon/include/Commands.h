@@ -39,7 +39,7 @@ namespace Networking
             // Quit and enter don't really need any data to be sent along 
             struct
             {
-                PlayerID ID;
+                UINT8 ID;
             } EnterData;
 
         } PacketData;

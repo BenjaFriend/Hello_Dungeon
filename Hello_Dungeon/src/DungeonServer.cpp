@@ -201,7 +201,7 @@ void DungeonServer::ProcessLocalConsole()
     // From itself? That seems bad
 }
 
-inline void DungeonServer::AddNewPlayer( PlayerID aID )
+inline void DungeonServer::AddNewPlayer( UINT8 aID )
 {
     for ( auto const & id : CurrentPlayers )
     {
