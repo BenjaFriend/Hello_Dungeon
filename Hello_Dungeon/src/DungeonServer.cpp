@@ -142,7 +142,8 @@ void DungeonServer::ListenThread()
         {
         case Networking::ECommandType::ENTER:
             LOG_TRACE( "Enter room!" );                 
-            AddNewPlayer( cmd.PacketData.EnterData.PlayerID );
+            AddNewPlayer( cmd.PacketData.EnterData.ID );
+            Map->PrintMap();
             break;
         case Networking::ECommandType::MOVE:
             LOG_TRACE( "MOVE!" );
@@ -209,6 +210,7 @@ inline void DungeonServer::AddNewPlayer( PlayerID aID )
             return;
         }
     }
-
+    LOG_TRACE( "Add new player : %c", aID );
     CurrentPlayers.push_back( aID );
+    Map->AddPlayer( aID );
 }

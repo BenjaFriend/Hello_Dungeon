@@ -104,6 +104,9 @@ namespace Networking
         /** The port that the server should run on */
         USHORT ServerPort = 50000;
 
+        /** The ID that this player selects for themselves */
+        PlayerID ClientPlayerID = 0;
+
         /** Lock-less command queue */
         moodycamel::ConcurrentQueue<Command> CommandQueue;
 

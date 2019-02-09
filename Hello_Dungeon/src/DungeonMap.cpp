@@ -55,9 +55,17 @@ void DungeonMap::PrintMap()
     PrintTopBorder();
 }
 
-void DungeonMap::AddPlayer()
+void DungeonMap::AddPlayer( PlayerID aID )
 {
     // Add a player to the map of players
+    Position spawnPos = {};
+    // Spawn the player someone random on the map that doesn't have
+    // treasure
+    spawnPos.Row = 0;
+    spawnPos.Col = 0;
+
+    PlayerPositions [ aID ] = spawnPos;
+    Map [ spawnPos.Row ] [ spawnPos.Col ] = aID;
 }
 
 void DungeonMap::SpawnTreasure()
@@ -68,9 +76,9 @@ void DungeonMap::SpawnTreasure()
 
     // Spawn random treasures
     for ( size_t i = 0; i < MaxTreasureCount; ++i )
-    {    
-        UINT8 randRow = rand() % ( Size - 1 );
-        UINT8 randCol = rand() % ( Size - 1 );
+    {
+        UINT8 randRow = static_cast< UINT8 > ( rand() % ( Size - 1 ) );
+        UINT8 randCol = static_cast< UINT8 > ( rand() % ( Size - 1 ) );
         Map [ randRow ] [ randCol ] = TREASURE;
     }
 }

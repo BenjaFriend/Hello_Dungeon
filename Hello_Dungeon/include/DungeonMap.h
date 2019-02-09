@@ -4,8 +4,9 @@
 
 #include <stdlib.h>     // srand, rand 
 #include <time.h>       // time 
+#include <unordered_map>
 
-#define TREASURE    'X'
+#define TREASURE    '!'
 #define PLAYER      'P'
 #define WALL        '+'
 #define EMPTY       ' '
@@ -48,7 +49,7 @@ public:
     /// Add a player to the map, putting them in a default
     /// spawn position
     /// </summary>
-    void AddPlayer();
+    void AddPlayer( PlayerID aID );
 
     /************************************************************************/
     /* Accessors                                                            */
@@ -88,4 +89,7 @@ private:
 
     /** The 2D grid representing the map */
     char** Map = nullptr;
+
+    /** A map of player positions */
+    std::unordered_map<PlayerID, Position> PlayerPositions;
 };

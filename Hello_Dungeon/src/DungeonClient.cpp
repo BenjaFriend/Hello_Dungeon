@@ -29,11 +29,6 @@ DungeonClient::~DungeonClient()
 
 void DungeonClient::InitCommandMap()
 {
-    // Enter ----------------------------------------
-    Command EnterCmd = {};
-    EnterCmd.CmdType = ECommandType::ENTER;
-    InputCmdMap.emplace( "ENTER", EnterCmd );
-
     // Quit ----------------------------------------
     Command QuitCmd = {};
     QuitCmd.CmdType = ECommandType::QUIT;
@@ -178,6 +173,19 @@ void DungeonClient::ProcessInput()
     std::cout << "Welcome to the dungeon!" << std::endl;
     std::cout << "\t* (For a list of commands, enter \"HELP\"):" << std::endl;
 
+    // Enter a character name
+    std::cout << "Enter one character for your player ID: ";
+    ClientPlayerID = std::getchar();
+    std::cout << "You selected player ID of " << ClientPlayerID << std::endl;
+
+    // Send the enter command
+    {
+        Command EnterCmd = {};
+        EnterCmd.CmdType = ECommandType::ENTER;
+        EnterCmd.PacketData.EnterData.ID = ClientPlayerID;
+        CommandQueue.enqueue( EnterCmd );
+    }
+    
     while ( 1 )
     {
         // Grab console input
@@ -191,8 +199,13 @@ void DungeonClient::ProcessInput()
         // Special case of quiting
         if ( input == "QUIT" || input == "Q" )
         {
+            // Send a quit command
+            Command QuitCmd = {};
+            QuitCmd.CmdType = ECommandType::QUIT;
+            QuitCmd.PacketData.EnterData.ID = ClientPlayerID;
+            CommandQueue.enqueue( QuitCmd );
+            // Flag that we are done
             IsDone = true;
-            // #TODO: Enqueue a leave command to send to the server
             return;
         }
         else if ( input == "HELP" || input == "H" )
