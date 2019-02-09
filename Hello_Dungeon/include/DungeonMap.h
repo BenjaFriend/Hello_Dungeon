@@ -8,17 +8,25 @@
 
 #define TREASURE    '!'
 #define PLAYER      'P'
-#define WALL        '+'
-#define EMPTY       ' '
+#define WALL        '0'
+#define EMPTY       '+'
 
 /// <summary>
 /// A struct representing a position of something
 /// on this map
 /// </summary>
-struct Position
+struct Vector2
 {
-    UINT8 Row = 0;
-    UINT8 Col = 0;
+    INT8 Row = 0;
+    INT8 Col = 0;
+
+    Vector2 operator +( const Vector2 & aOther )
+    {
+        Vector2 pos;
+        pos.Row = this->Row + aOther.Row;
+        pos.Col = this->Col + aOther.Col;
+        return pos;
+    }
 };
 
 /// <summary>
@@ -51,6 +59,14 @@ public:
     /// </summary>
     void AddPlayer( UINT8 aID );
 
+    /// <summary>
+    /// Attempt to move the player through the dungeon
+    /// in the given direction
+    /// </summary>
+    /// <param name="aID">ID of the player</param>
+    /// <param name="aMovement">Direction to move in the dungeon</param>
+    void MovePlayer( UINT8 aID, Vector2 aMovement );
+
     /************************************************************************/
     /* Accessors                                                            */
     /************************************************************************/
@@ -76,7 +92,22 @@ private:
     /// </summary>
     /// <param name="aPos">The position to check</param>
     /// <returns>True if the position is a treasure</returns>
-    inline bool IsPosTreasure( Position aPos );
+    inline bool IsPosTreasure( Vector2 aPos );
+
+    /// <summary>
+    /// Returns true if the given pos is within the range of the dungeon
+    /// and is an empty spot
+    /// </summary>
+    /// <param name="aPos">The position to check</param>
+    /// <returns></returns>
+    inline bool IsPosValid( Vector2 aPos );
+
+    /// <summary>
+    /// Checks if this player exists in the map or not
+    /// </summary>
+    /// <param name="aID">Player ID to check</param>
+    /// <returns>true if the player exists</returns>
+    inline bool PlayerExists( UINT8 aID );
 
     /** The size of this map */
     UINT8 Size = 5;
@@ -91,5 +122,5 @@ private:
     char** Map = nullptr;
 
     /** A map of player positions */
-    std::unordered_map<UINT8, Position> PlayerPositions;
+    std::unordered_map<UINT8, Vector2> PlayerPositions;
 };

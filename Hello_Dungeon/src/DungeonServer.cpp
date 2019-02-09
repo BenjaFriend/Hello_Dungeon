@@ -137,36 +137,42 @@ void DungeonServer::ListenThread()
         // #TODO: Do some kind of data validation so that we don't just copy 
         // random received data to memory
         memcpy( &cmd, ( void* ) buf, sizeof( Command ) );
+        Vector2 movePos = { 0, 0 };
 
         switch ( cmd.CmdType )
         {
         case Networking::ECommandType::ENTER:
             LOG_TRACE( "Enter room!" );                 
-            AddNewPlayer( cmd.PacketData.EnterData.ID );
+            AddNewPlayer( cmd.ID );
             Map->PrintMap();
             break;
         case Networking::ECommandType::MOVE:
             LOG_TRACE( "MOVE!" );
-
             if ( cmd.PacketData.Direction.Down )
             {
+                movePos.Row = 1;
                 LOG_TRACE( "Down" );
             }
             if ( cmd.PacketData.Direction.Up )
             {
+                movePos.Row = -1;
                 LOG_TRACE( "Up" );
             }
             if ( cmd.PacketData.Direction.Left )
             {
+                movePos.Col = -1;
                 LOG_TRACE( "Left" );
             }
             if ( cmd.PacketData.Direction.Right )
             {
+                movePos.Col = 1;
                 LOG_TRACE( "Right" );
             }
 
-
+            Map->MovePlayer( cmd.ID, movePos );
             // attempt to move the object
+            Map->PrintMap();
+
             break;
         case Networking::ECommandType::PICKUP:
             LOG_TRACE( "PICKUP" );

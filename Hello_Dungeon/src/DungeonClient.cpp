@@ -178,11 +178,17 @@ void DungeonClient::ProcessInput()
     ClientPlayerID = std::getchar();
     std::cout << "You selected player ID of " << ClientPlayerID << std::endl;
 
+    // Update all the commands to have the proper client ID
+    for ( auto & cmd : InputCmdMap )
+    {
+        cmd.second.ID = ClientPlayerID;
+    }
+
     // Send the enter command
     {
         Command EnterCmd = {};
         EnterCmd.CmdType = ECommandType::ENTER;
-        EnterCmd.PacketData.EnterData.ID = ClientPlayerID;
+        EnterCmd.ID = ClientPlayerID;
         CommandQueue.enqueue( EnterCmd );
     }
     
@@ -202,7 +208,7 @@ void DungeonClient::ProcessInput()
             // Send a quit command
             Command QuitCmd = {};
             QuitCmd.CmdType = ECommandType::QUIT;
-            QuitCmd.PacketData.EnterData.ID = ClientPlayerID;
+            QuitCmd.ID = ClientPlayerID;
             CommandQueue.enqueue( QuitCmd );
             // Flag that we are done
             IsDone = true;

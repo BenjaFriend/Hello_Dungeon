@@ -23,8 +23,13 @@ namespace Networking
 
     struct Command
     {
+        /** The type of command that this is */
         ECommandType CmdType;
 
+        /** The ID of the player giving the command */
+        UINT8 ID;
+
+        // Command structure
         union
         {
             // MOVE
@@ -36,12 +41,6 @@ namespace Networking
                 UINT8 Down  : 1;
             } Direction;    // 4 BITS
 
-            // Quit and enter don't really need any data to be sent along 
-            struct
-            {
-                UINT8 ID;
-            } EnterData;
-
         } PacketData;
     };
 
@@ -49,6 +48,8 @@ namespace Networking
     {
         unsigned char status;
         char payload [ DEF_BUF_SIZE ];
+
+        // Return the nearest parts of the dungeon to this player
     };
 
 }
