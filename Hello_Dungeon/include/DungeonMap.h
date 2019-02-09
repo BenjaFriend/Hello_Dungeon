@@ -2,10 +2,23 @@
 
 #include "stdafx.h"
 
+#include <stdlib.h>     // srand, rand 
+#include <time.h>       // time 
+
 #define TREASURE    'X'
 #define PLAYER      'P'
 #define WALL        '+'
 #define EMPTY       ' '
+
+/// <summary>
+/// A struct representing a position of something
+/// on this map
+/// </summary>
+struct Position
+{
+    UINT8 Row = 0;
+    UINT8 Col = 0;
+};
 
 /// <summary>
 /// The map that represents the current dungeon map.
@@ -55,6 +68,14 @@ private:
     /// Helper to print the top border of the maze
     /// </summary>
     inline void PrintTopBorder();
+
+    /// <summary>
+    /// Checks if the given row/col in the map is a treasure 
+    /// or not
+    /// </summary>
+    /// <param name="aPos">The position to check</param>
+    /// <returns>True if the position is a treasure</returns>
+    inline bool IsPosTreasure( Position aPos );
 
     /** The size of this map */
     UINT8 Size = 5;

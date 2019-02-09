@@ -141,12 +141,29 @@ void DungeonServer::ListenThread()
         switch ( cmd.CmdType )
         {
         case Networking::ECommandType::ENTER:
-            // Add this client to the server if they are 
-            // not already there
-            LOG_TRACE( "Enter room!" );
+            LOG_TRACE( "Enter room!" );                 
+            AddNewPlayer( cmd.PacketData.EnterData.PlayerID );
             break;
         case Networking::ECommandType::MOVE:
             LOG_TRACE( "MOVE!" );
+
+            if ( cmd.PacketData.Direction.Down )
+            {
+                LOG_TRACE( "Down" );
+            }
+            if ( cmd.PacketData.Direction.Up )
+            {
+                LOG_TRACE( "Up" );
+            }
+            if ( cmd.PacketData.Direction.Left )
+            {
+                LOG_TRACE( "Left" );
+            }
+            if ( cmd.PacketData.Direction.Right )
+            {
+                LOG_TRACE( "Right" );
+            }
+
 
             // attempt to move the object
             break;
@@ -181,4 +198,17 @@ void DungeonServer::ProcessLocalConsole()
     // The problem is that `recvfrom` is a blocking function, so 
     // the server will never exit that loop unless ... it receives a quit packet?
     // From itself? That seems bad
+}
+
+inline void DungeonServer::AddNewPlayer( PlayerID aID )
+{
+    for ( auto const & id : CurrentPlayers )
+    {
+        if ( id == aID )
+        {
+            return;
+        }
+    }
+
+    CurrentPlayers.push_back( aID );
 }

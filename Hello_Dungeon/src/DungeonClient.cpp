@@ -42,22 +42,22 @@ void DungeonClient::InitCommandMap()
     // Movement ----------------------------------------
     Command MoveRightCmd = {};
     MoveRightCmd.CmdType = ECommandType::MOVE;
-    MoveRightCmd.PacketData.Direction.move_right = 1;
+    MoveRightCmd.PacketData.Direction.Right = 1;
     InputCmdMap.emplace( "RIGHT", MoveRightCmd );
 
     Command MoveLeftCmd = {};
     MoveLeftCmd.CmdType = ECommandType::MOVE;
-    MoveLeftCmd.PacketData.Direction.move_left = 1;
+    MoveLeftCmd.PacketData.Direction.Left = 1;
     InputCmdMap.emplace( "LEFT", MoveLeftCmd );
 
     Command MoveUpCmd = {};
     MoveUpCmd.CmdType = ECommandType::MOVE;
-    MoveUpCmd.PacketData.Direction.move_up = 1;
+    MoveUpCmd.PacketData.Direction.Up = 1;
     InputCmdMap.emplace( "UP", MoveUpCmd );
 
     Command MoveDownCmd = {};
     MoveDownCmd.CmdType = ECommandType::MOVE;
-    MoveDownCmd.PacketData.Direction.move_down = 1;
+    MoveDownCmd.PacketData.Direction.Down = 1;
     InputCmdMap.emplace( "DOWN", MoveDownCmd );
 
     // Pickup ----------------------------------------
@@ -176,7 +176,7 @@ void DungeonClient::ClientWorker()
 void DungeonClient::ProcessInput()
 {
     std::cout << "Welcome to the dungeon!" << std::endl;
-    std::cout << "For a list of commands, enter \"HELP\"):" << std::endl;
+    std::cout << "\t* (For a list of commands, enter \"HELP\"):" << std::endl;
 
     while ( 1 )
     {

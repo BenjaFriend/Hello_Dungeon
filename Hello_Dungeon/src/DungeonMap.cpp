@@ -19,6 +19,8 @@ DungeonMap::DungeonMap( UINT8 aSize, UINT32 aTreasureValue, UINT32 aMaxTreasureC
             Map [ r ] [ c ] = WALL;
         }
     }
+
+    SpawnTreasure();
 }
 
 DungeonMap::~DungeonMap()
@@ -39,7 +41,7 @@ DungeonMap::~DungeonMap()
 void DungeonMap::PrintMap()
 {
     PrintTopBorder();
-    
+
     for ( size_t r = 0; r < Size; ++r )
     {
         printf( "| " );
@@ -60,9 +62,17 @@ void DungeonMap::AddPlayer()
 
 void DungeonMap::SpawnTreasure()
 {
-    // Randomly pick spots to spawn a treasure within the 
+    srand( time( NULL ) );
+    // Set treasure value to be random between 1 - value
+    TreasureValue = rand() % TreasureValue + 1;
 
-
+    // Spawn random treasures
+    for ( size_t i = 0; i < MaxTreasureCount; ++i )
+    {    
+        UINT8 randRow = rand() % ( Size - 1 );
+        UINT8 randCol = rand() % ( Size - 1 );
+        Map [ randRow ] [ randCol ] = TREASURE;
+    }
 }
 
 inline void DungeonMap::PrintTopBorder()
@@ -70,4 +80,13 @@ inline void DungeonMap::PrintTopBorder()
     printf( "  " );
     for ( size_t i = 0; i < Size; ++i ) printf( "- " );
     printf( "\n" );
+}
+
+inline bool DungeonMap::IsPosTreasure( Position aPos )
+{
+    // Check for the map bounds
+    if ( aPos.Row < 0 || aPos.Row >= Size ) return false;
+    if ( aPos.Col < 0 || aPos.Col >= Size ) return false;
+
+    return ( Map [ aPos.Row ] [ aPos.Col ] == TREASURE );
 }

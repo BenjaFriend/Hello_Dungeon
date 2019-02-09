@@ -30,13 +30,17 @@ namespace Networking
             // MOVE
             struct
             {
-                UINT8 move_left     : 1;    // Flags for what direction 
-                UINT8 move_right    : 1;    // the player may move
-                UINT8 move_up       : 1;
-                UINT8 move_down     : 1;
+                UINT8 Left : 1;    // Flags for what direction 
+                UINT8 Right : 1;    // the player may move
+                UINT8 Up : 1;
+                UINT8 Down : 1;
             } Direction;  // 4 BITS
 
             // Quit and enter don't really need any data to be sent along 
+            struct
+            {
+                UINT8 PlayerID : 4;
+            } EnterData;
 
         } PacketData;
     };

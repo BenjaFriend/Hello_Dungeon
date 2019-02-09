@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <mutex>
 #include <memory>
+#include <vector>
 
 #include "SocketUse.h"
 
@@ -77,6 +78,13 @@ namespace Networking
         /// </summary>
         void ProcessLocalConsole();
 
+        /// <summary>
+        /// Add a player to the list of current players
+        /// if they do not already exist
+        /// </summary>
+        /// <param name="aID">Player ID to add</param>
+        inline void AddNewPlayer( PlayerID aID );
+
         /** The socket for the server to use */
         SOCKET ServerSocket = INVALID_SOCKET;
 
@@ -91,6 +99,9 @@ namespace Networking
 
         /** The dungeon map to use for the player */
         std::unique_ptr<DungeonMap> Map;
+
+        /** A vector of currently connected players */
+        std::vector<PlayerID> CurrentPlayers;
     };
 
 }   // namespace Networking

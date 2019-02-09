@@ -24,6 +24,7 @@ typedef signed __int32          INT32;
 typedef signed __int8           INT8;
 typedef signed short            SHORT;
 
+typedef UINT8                   PlayerID;
 
 /************************************************************************/
 /* Debug settings                                                       */
