@@ -11,6 +11,7 @@
 #include <string.h>
 #include <atomic>
 #include <thread>
+#include <assert.h>
 
 /************************************************************************/
 /* Number definitions                                                   */

@@ -137,7 +137,6 @@ void DungeonServer::ListenThread()
         // #TODO: Do some kind of data validation so that we don't just copy 
         // random received data to memory
         memcpy( &cmd, ( void* ) buf, sizeof( Command ) );
-        Vector2 movePos = { 0, 0 };
 
         switch ( cmd.CmdType )
         {
@@ -146,7 +145,8 @@ void DungeonServer::ListenThread()
             Map->PrintMap();
             break;
         case Networking::ECommandType::MOVE:
-            LOG_TRACE( "MOVE!" );
+        {
+            Vector2 movePos = { 0, 0 };
             if ( cmd.PacketData.Direction.Down )
             {
                 movePos.Row = 1;
@@ -167,26 +167,28 @@ void DungeonServer::ListenThread()
             Map->MovePlayer( cmd.ID, movePos );
             // attempt to move the object
             Map->PrintMap();
-
-            break;
+        }
+        break;
         case Networking::ECommandType::PICKUP:
-            LOG_TRACE( "PICKUP" );
+        {
+            char neighbors [ 16 ] = "\0";
 
             // Check if the client can pick something up
-            break;
-        case Networking::ECommandType::QUIT:
-            LOG_TRACE( "CLIENT QUIT : %c", cmd.ID );
-            Map->RemovePlayer( cmd.ID );
-            break;
-
-        default:
-            break;
+            Map->GetAdjacentTiles( cmd.ID, neighbors, 16 );              
         }
+        break;
+        case Networking::ECommandType::QUIT:
+        {
+            Map->RemovePlayer( cmd.ID );
+        }
+        break;
+        
+        default:
+        {
 
-        //LOG_TRACE( "Data recieved: %c // %s", cmd.CmdType, cmd.payload );
-
-        // #TODO: Throw this command in a ring buffer or something to process it
-        // on a separate thread (lockless queue could also work)
+        }
+        break;
+        }
 
     }
 }

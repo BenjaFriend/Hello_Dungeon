@@ -5,7 +5,6 @@
 /// </summary>
 /// <author>Ben Hoffman</author>
 
-
 #define DEF_BUF_SIZE 256
 
 namespace Networking
@@ -21,12 +20,27 @@ namespace Networking
         QUIT
     };
 
+    /// <summary>
+    /// Types of responses that the server can send to their currently
+    /// connected players. 
+    /// </summary>
     enum class EResponseType : UINT8
     {
         MAP,        // The map around the player
-        STATS       // The stats of this player
+        INVENTORY       // The stats of this player
     };
 
+    /// <summary>
+    /// Data about what things a player has available to them
+    /// </summary>
+    struct PlayerInventory
+    {
+        UINT32 TreasureAmount = 0;
+    };
+
+    /// <summary>
+    /// Command structure for a client to send to the server
+    /// </summary>
     struct Command
     {
         /** The type of command that this is */
@@ -50,29 +64,29 @@ namespace Networking
         } PacketData;
     };
 
+    /// <summary>
+    /// A response status that the server can send to their clients
+    /// </summary>
     struct Status
     {
+        /** The type of response that the server is sending */
         EResponseType ResType;
 
-        // Response strucutre
+        // Response structure
         union
         {
             // MAP
             struct
             {
+                /** This will be used to tell the player what adjacent tiles 
+                are currently around them. */
                 char map [ 16 ];
             } MapData;
 
-            struct
-            {
-
-            } Stats;
+            // INVENTORY
+            PlayerInventory Inventory;
 
         } PacketData;
-
-        char payload [ DEF_BUF_SIZE ];
-
-        // Return the nearest parts of the dungeon to this player
     };
 
-}
+}   // namespace Networking

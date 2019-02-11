@@ -20,7 +20,7 @@ DungeonMap::DungeonMap( UINT8 aSize, UINT32 aTreasureValue, UINT32 aMaxTreasureC
         }
     }
 
-    //SpawnTreasure();
+    SpawnTreasure();
 }
 
 DungeonMap::~DungeonMap()
@@ -63,11 +63,7 @@ void DungeonMap::AddPlayer( UINT8 aID )
         return;
     }
     // Add a player to the map of players
-    Vector2 spawnPos = { 0, 0 };
-    // Spawn the player someone random on the map that doesn't have
-    // treasure
-    spawnPos.Row = 0;
-    spawnPos.Col = 0;
+    Vector2 spawnPos = GetRandomEmptyPos();
 
     PlayerPositions [ aID ] = spawnPos;
     Map [ spawnPos.Row ] [ spawnPos.Col ] = aID;
@@ -94,7 +90,7 @@ void DungeonMap::MovePlayer( UINT8 aID, Vector2 aMovement )
     Vector2 NewPos = CurPos + aMovement;
 
     // You can't move into treasure
-    if ( !IsPosValid( NewPos ) ) return;
+    if ( !IsPosEmpty( NewPos ) ) return;
 
     // Set this players position to the new position
     PlayerPositions [ aID ] = NewPos;
@@ -102,6 +98,46 @@ void DungeonMap::MovePlayer( UINT8 aID, Vector2 aMovement )
     // Update the map with the new player position
     Map [ CurPos.Row ] [ CurPos.Col ] = EMPTY;
     Map [ NewPos.Row ] [ NewPos.Col ] = aID;
+}
+
+void DungeonMap::GetAdjacentTiles( UINT8 aID, char * aBuf, size_t aBufSize )
+{
+    if ( !PlayerExists( aID ) ) return;
+
+    static INT8 numNeighbors = 8;
+
+    assert( aBuf != nullptr && aBufSize >= numNeighbors );
+
+    static INT8 rowNeighbors [] = { -1, -1, -1, +0,   +0, +1, +1, +1 };
+    static INT8 colNeighbors [] = { -1, +0, +1, -1,   +1, -1, +0, +1 };
+
+    Vector2 PlayerPos = PlayerPositions [ aID ];
+    printf( "Adj. Tiles: \n" );
+    // Add neighbors into the char buffer in this order
+    for ( int i = 0; i < numNeighbors; ++i )
+    {
+        INT8 testX = PlayerPos.Row + rowNeighbors [ i ];
+        INT8 testY = PlayerPos.Col + colNeighbors [ i ];
+
+        // Recursive call to try and solve the maze
+        if ( IsPosSafe( testX, testY ) )
+        {
+            // Put the value in the char buff
+            aBuf [ i ] = Map [ testX ] [ testY ];
+        }
+        else
+        {
+            // Add an invalid symbol if 
+            aBuf [ i ] = INVALID;
+        }
+
+        printf( "%c ", aBuf [ i ] );
+        if ( i == 2 || i == 4 ) printf( "\n" );
+        if ( i == 3 ) printf( "%c ", aID );
+    }
+
+    // Null terminate
+    aBuf [ numNeighbors ] = '\0';
 }
 
 void DungeonMap::SpawnTreasure()
@@ -126,20 +162,24 @@ inline void DungeonMap::PrintTopBorder()
     printf( "\n" );
 }
 
-inline bool DungeonMap::IsPosTreasure( Vector2 aPos )
+inline bool DungeonMap::IsPosSafe( INT8 row, INT8 col )
 {
     // Check for the map bounds
-    if ( aPos.Row < 0 || aPos.Row >= Size ) return false;
-    if ( aPos.Col < 0 || aPos.Col >= Size ) return false;
+    if ( row < 0 || row >= Size ) return false;
+    if ( col < 0 || col >= Size ) return false;
+    return true;
+}
+
+inline bool DungeonMap::IsPosTreasure( Vector2 aPos )
+{
+    if ( !IsPosSafe( aPos.Row, aPos.Col ) ) return false;
 
     return ( Map [ aPos.Row ] [ aPos.Col ] == TREASURE );
 }
 
-inline bool DungeonMap::IsPosValid( Vector2 aPos )
+inline bool DungeonMap::IsPosEmpty( Vector2 aPos )
 {
-    // Check for the map bounds
-    if ( aPos.Row < 0 || aPos.Row >= Size ) return false;
-    if ( aPos.Col < 0 || aPos.Col >= Size ) return false;
+    if ( !IsPosSafe( aPos.Row, aPos.Col ) ) return false;
 
     return ( Map [ aPos.Row ] [ aPos.Col ] == EMPTY );
 }
@@ -151,4 +191,18 @@ inline bool DungeonMap::PlayerExists( UINT8 aID )
         return true;
     }
     return false;
+}
+
+inline Vector2 DungeonMap::GetRandomEmptyPos()
+{
+    Vector2 newPos = { 0, 0 };
+
+    // Loop until we get a empty spot on the map
+    while ( Map [ newPos.Row ] [ newPos.Col ] != EMPTY )
+    {
+        newPos.Row = static_cast< UINT8 > ( rand() % ( Size - 1 ) );
+        newPos.Col = static_cast< UINT8 > ( rand() % ( Size - 1 ) );
+    }
+
+    return newPos;
 }

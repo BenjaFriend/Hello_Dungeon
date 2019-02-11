@@ -102,6 +102,9 @@ namespace Networking
 
         /** A vector of currently connected players */
         std::vector<UINT8> CurrentPlayers;
+
+        /** A map of inventories to each player */
+        std::unordered_map <UINT8, PlayerInventory> PlayerInvMap;
     };
 
 }   // namespace Networking

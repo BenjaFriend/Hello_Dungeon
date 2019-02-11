@@ -10,6 +10,7 @@
 #define PLAYER      'P'
 #define WALL        '0'
 #define EMPTY       '+'
+#define INVALID     '.'
 
 /// <summary>
 /// A struct representing a position of something
@@ -73,6 +74,15 @@ public:
     /// <param name="aMovement">Direction to move in the dungeon</param>
     void MovePlayer( UINT8 aID, Vector2 aMovement );
 
+    /// <summary>
+    /// Get the adjacent tiles on the map and 
+    /// copy them to the given character buffer. 
+    /// </summary>
+    /// <param name="aID">The player ID to get the adjacent tiles of</param>
+    /// <param name="buf">Buffer to put them in</param>
+    /// <param name="aBufSize">Size of the given buffer</param>
+    void GetAdjacentTiles( UINT8 aID, char* aBuf, size_t aBufSize );
+
     /************************************************************************/
     /* Accessors                                                            */
     /************************************************************************/
@@ -93,6 +103,14 @@ private:
     inline void PrintTopBorder();
 
     /// <summary>
+    /// Checks if a position is within the bounds of this map
+    /// </summary>
+    /// <param name="row">Row to check</param>
+    /// <param name="col">Col to check</param>
+    /// <returns>True if within the bounds</returns>
+    inline bool IsPosSafe( INT8 row, INT8 col );
+
+    /// <summary>
     /// Checks if the given row/col in the map is a treasure 
     /// or not
     /// </summary>
@@ -106,7 +124,7 @@ private:
     /// </summary>
     /// <param name="aPos">The position to check</param>
     /// <returns></returns>
-    inline bool IsPosValid( Vector2 aPos );
+    inline bool IsPosEmpty( Vector2 aPos );
 
     /// <summary>
     /// Checks if this player exists in the map or not
@@ -114,6 +132,13 @@ private:
     /// <param name="aID">Player ID to check</param>
     /// <returns>true if the player exists</returns>
     inline bool PlayerExists( UINT8 aID );
+
+    /// <summary>
+    /// Get a random position on the map that is currently
+    /// empty (no players, treasure, or walls)
+    /// </summary>
+    /// <returns>Valid Vector2 that is on the map</returns>
+    inline Vector2 GetRandomEmptyPos();
 
     /** The size of this map */
     UINT8 Size = 5;
