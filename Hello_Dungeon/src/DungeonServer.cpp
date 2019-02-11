@@ -54,6 +54,7 @@ void DungeonServer::Shutdown()
 
 void DungeonServer::ListenThread()
 {
+#pragma  region Init Socket
     isDone = false;
     // Init winsoc ---------------------
     WSADATA wsaData;
@@ -87,6 +88,7 @@ void DungeonServer::ListenThread()
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = INADDR_ANY;
     server.sin_port = htons( Port );
+#pragma  endregion
 
     if ( bind( ServerSocket, ( struct sockaddr* )&server, sizeof( server ) ) == SOCKET_ERROR )
     {
@@ -171,23 +173,47 @@ void DungeonServer::ListenThread()
         break;
         case Networking::ECommandType::PICKUP:
         {
-            char neighbors [ 16 ] = "\0";
-
-            // Check if the client can pick something up
-            Map->GetAdjacentTiles( cmd.ID, neighbors, 16 );              
+            // Attempt to pick something up
         }
         break;
         case Networking::ECommandType::QUIT:
         {
+            LOG_TRACE( "Player %c quits!", cmd.ID );
             Map->RemovePlayer( cmd.ID );
         }
         break;
-        
+
         default:
         {
 
         }
         break;
+        }
+
+        char neighbors [ MAP_BUF_SIZE ] = "\0";
+
+        // Check if the client can pick something up
+        Map->GetAdjacentTiles( cmd.ID, neighbors, MAP_BUF_SIZE );
+
+        // Send a response to the client
+        char resStatus [ sizeof( Status ) ];
+        Status res = {};
+        res.ResType = EResponseType::MAP;
+        strcpy_s( res.PacketData.MapData.map, MAP_BUF_SIZE, neighbors );
+        memcpy( resStatus, ( void* ) ( &res ), sizeof( Status ) );
+
+        // Send a response back to the client with their map info
+        if ( sendto(
+            ServerSocket,
+            resStatus,
+            sizeof( Status ),
+            0,
+            ( struct sockaddr* )&si_other,
+            slen ) == SOCKET_ERROR )
+        {
+            LOG_TRACE( "sendto failed with error code : %d", WSAGetLastError() );
+            Shutdown();
+            exit( EXIT_FAILURE );
         }
 
     }

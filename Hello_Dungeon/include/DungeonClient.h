@@ -8,6 +8,8 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <mutex>
+#include <thread>
 
 namespace Networking
 {
@@ -83,6 +85,13 @@ namespace Networking
         /// </summary>
         void PrintCommandList();
 
+        /// <summary>
+        /// Print out the map around the player
+        /// </summary>
+        /// <param name="aBuf">The map buffer</param>
+        /// <param name="aLen">Length of that buffer</param>
+        void PrintMap( char* aBuf, size_t aLen );
+
         /** The socket for the client to use */
         SOCKET ClientSocket = INVALID_SOCKET;
 
@@ -112,6 +121,9 @@ namespace Networking
 
         /** A map of possible inputs to their corresponding commands */
         std::unordered_map<std::string, Command> InputCmdMap;
+
+        /** Mutex to control console printing on the client */
+        std::mutex PrintMutex;
 
     };
 

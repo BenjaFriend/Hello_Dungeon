@@ -5,7 +5,7 @@
 /// </summary>
 /// <author>Ben Hoffman</author>
 
-#define DEF_BUF_SIZE 256
+#define DEF_BUF_SIZE    256
 
 namespace Networking
 {
@@ -28,14 +28,6 @@ namespace Networking
     {
         MAP,        // The map around the player
         INVENTORY       // The stats of this player
-    };
-
-    /// <summary>
-    /// Data about what things a player has available to them
-    /// </summary>
-    struct PlayerInventory
-    {
-        UINT32 TreasureAmount = 0;
     };
 
     /// <summary>
@@ -73,18 +65,21 @@ namespace Networking
         EResponseType ResType;
 
         // Response structure
-        union
+        union PacketData_s
         {
             // MAP
-            struct
+            struct MapData_s
             {
                 /** This will be used to tell the player what adjacent tiles 
                 are currently around them. */
-                char map [ 16 ];
+                char map [ MAP_BUF_SIZE ];
             } MapData;
 
             // INVENTORY
-            PlayerInventory Inventory;
+            struct PlayerInventory_s
+            {
+                UINT32 TreasureAmount;
+            } Inventory;
 
         } PacketData;
     };

@@ -73,6 +73,9 @@ void DungeonMap::RemovePlayer( UINT8 aID )
 {
     if ( !PlayerExists( aID ) ) return;
 
+    // Set map position to empty onces the player exits
+    Map [ PlayerPositions [ aID ].Row ] [ PlayerPositions [ aID ].Col ] = EMPTY;
+
     PlayerPositions.erase( aID );
 }
 
@@ -104,7 +107,7 @@ void DungeonMap::GetAdjacentTiles( UINT8 aID, char * aBuf, size_t aBufSize )
 {
     if ( !PlayerExists( aID ) ) return;
 
-    static INT8 numNeighbors = 8;
+    static INT8 numNeighbors = LOCAL_MAP_SIZE;
 
     assert( aBuf != nullptr && aBufSize >= numNeighbors );
 
@@ -135,6 +138,7 @@ void DungeonMap::GetAdjacentTiles( UINT8 aID, char * aBuf, size_t aBufSize )
         if ( i == 2 || i == 4 ) printf( "\n" );
         if ( i == 3 ) printf( "%c ", aID );
     }
+    printf( "\n" );
 
     // Null terminate
     aBuf [ numNeighbors ] = '\0';
@@ -186,11 +190,7 @@ inline bool DungeonMap::IsPosEmpty( Vector2 aPos )
 
 inline bool DungeonMap::PlayerExists( UINT8 aID )
 {
-    if ( PlayerPositions.find( aID ) != PlayerPositions.end() )
-    {
-        return true;
-    }
-    return false;
+    return ( PlayerPositions.find( aID ) != PlayerPositions.end() );
 }
 
 inline Vector2 DungeonMap::GetRandomEmptyPos()

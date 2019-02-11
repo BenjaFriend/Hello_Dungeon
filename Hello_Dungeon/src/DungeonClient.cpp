@@ -119,6 +119,7 @@ void DungeonClient::ClientWorker()
     int slen;
     struct sockaddr_in  si_other;
     slen = sizeof( si_other );
+    char buf [ DEF_BUF_SIZE ];
 
     memset( ( char* ) &si_other, 0, sizeof( si_other ) );
     si_other.sin_family = AF_INET;
@@ -159,6 +160,34 @@ void DungeonClient::ClientWorker()
             //memset( buf, '\0', DEF_BUF_SIZE );
 
             // Receive the game state back from the server
+            //block until recieved a packet
+            if ( recvfrom( serverSockID, buf, sizeof( Status ), 0, ( struct sockaddr* )&si_other, &slen ) == SOCKET_ERROR )
+            {
+                printf( "recvfrom() failed : %d ", WSAGetLastError() );
+                Shutdown();
+                exit( EXIT_FAILURE );
+            }
+
+            Status res = {};
+            memcpy( &res, ( void* ) buf, sizeof( Status ) );
+            switch ( res.ResType )
+            {
+                case EResponseType::MAP:
+                {
+                    PrintMutex.lock();
+                    LOG_TRACE( "Got the map! %s", res.PacketData.MapData.map );
+                    PrintMap( buf, MAP_BUF_SIZE );
+                    PrintMutex.unlock();
+                }
+                break;
+                case EResponseType::INVENTORY:
+                {
+
+                }
+                break;
+            default:
+                break;
+            }
         }
         else
         {
@@ -170,6 +199,7 @@ void DungeonClient::ClientWorker()
 
 void DungeonClient::ProcessInput()
 {
+    PrintMutex.lock();
     std::cout << "Welcome to the dungeon!" << std::endl;
     std::cout << "\t* (For a list of commands, enter \"HELP\"):" << std::endl;
 
@@ -177,6 +207,7 @@ void DungeonClient::ProcessInput()
     std::cout << "Enter one character for your player ID: ";
     ClientPlayerID = std::getchar();
     std::cout << "You selected player ID of " << ClientPlayerID << std::endl;
+    PrintMutex.unlock();
 
     // Update all the commands to have the proper client ID
     for ( auto & cmd : InputCmdMap )
@@ -191,13 +222,15 @@ void DungeonClient::ProcessInput()
         EnterCmd.ID = ClientPlayerID;
         CommandQueue.enqueue( EnterCmd );
     }
-    
+
     while ( 1 )
     {
+        PrintMutex.lock();
         // Grab console input
         std::cout << "Enter your command: ";
         std::string input = "";
         std::getline( std::cin, input );
+        PrintMutex.unlock();
 
         // Convert string to upper case
         for ( auto & c : input ) c = toupper( c );
@@ -234,10 +267,25 @@ void DungeonClient::ProcessInput()
 
 void DungeonClient::PrintCommandList()
 {
+    PrintMutex.lock();
     std::cout << "Command list:" << std::endl;
 
     for ( const auto & itr : InputCmdMap )
     {
         std::cout << "\t" << itr.first << std::endl;
     }
+    PrintMutex.unlock();
+}
+
+void DungeonClient::PrintMap( char * aBuf, size_t aLen )
+{
+    printf( "ADK BUF: %s \n\n", aBuf );
+
+    for ( size_t i = 0; i < aLen; ++i )
+    {
+        printf( "%c ", aBuf [ i ] );
+        if ( i == 2 || i == 4 ) printf( "\n" );
+        if ( i == 3 ) printf( "%c ", ClientPlayerID );
+    }
+    printf( "\n" );
 }
