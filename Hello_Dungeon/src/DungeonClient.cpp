@@ -175,8 +175,8 @@ void DungeonClient::ClientWorker()
                 case EResponseType::MAP:
                 {
                     PrintMutex.lock();
-                    LOG_TRACE( "Got the map! %s", res.PacketData.MapData.map );
-                    PrintMap( buf, MAP_BUF_SIZE );
+                    PrintMap( res.PacketData.MapData.map, MAP_BUF_SIZE );
+                    printf( "\n\tYou're treasure count is: %ud\n", res.Inventory.TreasureAmount );
                     PrintMutex.unlock();
                 }
                 break;
@@ -243,6 +243,10 @@ void DungeonClient::ProcessInput()
             QuitCmd.CmdType = ECommandType::QUIT;
             QuitCmd.ID = ClientPlayerID;
             CommandQueue.enqueue( QuitCmd );
+
+            // Sleep so that the quit command can be sent hopefully
+            std::this_thread::sleep_for( std::chrono::milliseconds( 30 ) );
+
             // Flag that we are done
             IsDone = true;
             return;
@@ -279,7 +283,7 @@ void DungeonClient::PrintCommandList()
 
 void DungeonClient::PrintMap( char * aBuf, size_t aLen )
 {
-    printf( "ADK BUF: %s \n\n", aBuf );
+    printf( "MAP BUF: %s \n\n", aBuf );
 
     for ( size_t i = 0; i < aLen; ++i )
     {

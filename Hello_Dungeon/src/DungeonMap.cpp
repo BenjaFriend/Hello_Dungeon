@@ -103,6 +103,34 @@ void DungeonMap::MovePlayer( UINT8 aID, Vector2 aMovement )
     Map [ NewPos.Row ] [ NewPos.Col ] = aID;
 }
 
+UINT32 DungeonMap::AttemptPickUp( UINT8 aID )
+{
+    if ( !PlayerExists( aID ) ) return 0;
+
+    UINT32 Score = 0;
+
+    static INT8 numNeighbors = LOCAL_MAP_SIZE;
+    static INT8 rowNeighbors [] = { -1, -1, -1, +0,   +0, +1, +1, +1 };
+    static INT8 colNeighbors [] = { -1, +0, +1, -1,   +1, -1, +0, +1 };
+
+    Vector2 PlayerPos = PlayerPositions [ aID ];
+
+    for ( size_t i = 0; i < numNeighbors; ++i )
+    {
+        INT8 testX = PlayerPos.Row + rowNeighbors [ i ];
+        INT8 testY = PlayerPos.Col + colNeighbors [ i ];
+
+        if ( IsPosSafe( testX, testY ) && Map [ testX ] [ testY ] == TREASURE )
+        {
+            Score += TreasureValue;
+            Map [ testX ] [ testY ] = EMPTY;
+            // Only allow for one item to be picked up at a time
+            return Score;
+        }
+    }
+    return Score;
+}
+
 void DungeonMap::GetAdjacentTiles( UINT8 aID, char * aBuf, size_t aBufSize )
 {
     if ( !PlayerExists( aID ) ) return;
@@ -122,7 +150,6 @@ void DungeonMap::GetAdjacentTiles( UINT8 aID, char * aBuf, size_t aBufSize )
         INT8 testX = PlayerPos.Row + rowNeighbors [ i ];
         INT8 testY = PlayerPos.Col + colNeighbors [ i ];
 
-        // Recursive call to try and solve the maze
         if ( IsPosSafe( testX, testY ) )
         {
             // Put the value in the char buff
@@ -142,6 +169,7 @@ void DungeonMap::GetAdjacentTiles( UINT8 aID, char * aBuf, size_t aBufSize )
 
     // Null terminate
     aBuf [ numNeighbors ] = '\0';
+    printf( "MAP BUF: %s \n\n", aBuf );
 }
 
 void DungeonMap::SpawnTreasure()

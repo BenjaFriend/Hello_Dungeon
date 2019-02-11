@@ -75,6 +75,14 @@ public:
     void MovePlayer( UINT8 aID, Vector2 aMovement );
 
     /// <summary>
+    /// Attempts to pick up an item that is within the range 
+    /// of the player. 
+    /// </summary>
+    /// <param name="aID">Player ID</param>
+    /// <returns>Greater than 0 if successful, 0 if no treasure is available</returns>
+    UINT32 AttemptPickUp( UINT8 aID );
+
+    /// <summary>
     /// Get the adjacent tiles on the map and 
     /// copy them to the given character buffer. 
     /// </summary>

@@ -4,7 +4,7 @@
 /// <author>Ben Hoffman</author>
 
 #define LOCAL_MAP_SIZE  8
-#define MAP_BUF_SIZE    8
+#define MAP_BUF_SIZE    16
 
 /************************************************************************/
 /* Common headers / libraries                                           */

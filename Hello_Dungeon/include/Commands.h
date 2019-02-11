@@ -75,13 +75,16 @@ namespace Networking
                 char map [ MAP_BUF_SIZE ];
             } MapData;
 
-            // INVENTORY
-            struct PlayerInventory_s
-            {
-                UINT32 TreasureAmount;
-            } Inventory;
-
         } PacketData;
+
+        // INVENTORY
+        // I decided to just replicate this every time for ease of 
+        // use with this specific application, but the framework is
+        // there to change this in the future very easily
+        struct PlayerInventory_s
+        {
+            UINT32 TreasureAmount;
+        } Inventory;
     };
 
 }   // namespace Networking

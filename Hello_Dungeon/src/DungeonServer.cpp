@@ -144,7 +144,6 @@ void DungeonServer::ListenThread()
         {
         case Networking::ECommandType::ENTER:
             AddNewPlayer( cmd.ID );
-            Map->PrintMap();
             break;
         case Networking::ECommandType::MOVE:
         {
@@ -174,6 +173,7 @@ void DungeonServer::ListenThread()
         case Networking::ECommandType::PICKUP:
         {
             // Attempt to pick something up
+            PlayerInvMap [ cmd.ID ].TreasureAmount += Map->AttemptPickUp( cmd.ID );
         }
         break;
         case Networking::ECommandType::QUIT:
@@ -189,6 +189,7 @@ void DungeonServer::ListenThread()
         }
         break;
         }
+        Map->PrintMap();
 
         char neighbors [ MAP_BUF_SIZE ] = "\0";
 
@@ -197,8 +198,11 @@ void DungeonServer::ListenThread()
 
         // Send a response to the client
         char resStatus [ sizeof( Status ) ];
+        memset( resStatus, '\0', sizeof( Status ) );
+
         Status res = {};
         res.ResType = EResponseType::MAP;
+        res.Inventory = PlayerInvMap [ cmd.ID ];
         strcpy_s( res.PacketData.MapData.map, MAP_BUF_SIZE, neighbors );
         memcpy( resStatus, ( void* ) ( &res ), sizeof( Status ) );
 
